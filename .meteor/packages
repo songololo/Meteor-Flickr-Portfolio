@@ -6,3 +6,10 @@
 autopublish
 insecure
 preserve-inputs
+d3
+bootstrap
+http
+jquery-layout
+jquery
+appcache
+handlebars

@@ -1,13 +1,67 @@
 <head>
-  <title>Meteor-Flickr-Portfolio</title>
+  <title>gsweb</title>
 </head>
 
 <body>
-  {{> hello}}
+	{{>backgroundImage}}
+	<div id="header">
+		header information bar
+	</div>
+	<div class='container'>
+		<div id="setsBrowser">		
+			{{>setsBrowser}}
+		</div>
+		<div id="photoBrowser">
+			{{>photoBrowser}}
+		</div>
+		<div id="photoScroller">
+			{{>photoScroller}}
+		</div>
+	</div>
+	
+	<div id='footer'>
+		{{>footer}}
+	</div>
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+
+
+<template name="backgroundImage">
+  <style>
+	  body {
+	  background-image:url({{background}});
+	  background-repeat: no-repeat;
+	  background-position: left top;
+	  }
+  </style>
+</template>
+
+<template name="setsBrowser">
+	<div class="setTile">
+		{{#each sets}}
+			<img src="http://farm{{data.farm}}.staticflickr.com/{{data.server}}/{{data.primary}}_{{data.secret}}_n.jpg">
+		{{/each}}
+	</div>
+</template>
+
+<template name="photoBrowser">
+	<div class="photoTile">
+		{{#each photos}} 
+        	<img src="http://farm{{data.farm}}.staticflickr.com/{{data.server}}/{{data.id}}_{{data.secret}}_m.jpg"/>
+		{{/each}}
+	</div>
+</template>
+
+<template name="photoScroller">
+	<div class="displayPhoto">
+		<img src="{{photo}}">
+	</div>
+</template>
+
+
+
+<template name="footer">
+	<div>
+    	footer information bar
+    </div>
 </template>
