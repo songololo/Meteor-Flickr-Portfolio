@@ -85,10 +85,14 @@ FlickrSetPhotos = function(apiKey,setFlickrID,setDBid,photoDBKey){
 				var info = photoResult.photoset.photo[i];
 				console.log(i+" "+setFlickrID);
 				console.log(i+" "+setDBid);
-				//setsDB.setDBid.insert({name:photoDBKey, data:info});
+				setsDB.update(setDBid,
+					{$addToSet:
+						{photos:
+							{photo:photoDBKey,
+							data:info}
+						}
+					});
 			}
 		}
 	});
 };
-
-
