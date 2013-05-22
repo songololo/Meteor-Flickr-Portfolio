@@ -27,8 +27,8 @@ setsDB = new Meteor.Collection(setsDBKey);
 if (Meteor.is_client) {
 	
 	Template.backgroundImage.background = function(){
-		FlickrRandomPhotoFromSet(apiKey,setID);
-		return Session.get("RandomURL");
+		//FlickrRandomPhotoFromSet(apiKey,setID);
+		//return Session.get("RandomURL");
 	};
 
 	Template.setsBrowser.sets = function(){
@@ -43,7 +43,7 @@ if (Meteor.is_client) {
 	});
 
 	Template.photoBrowser.photos = function () {
-		return photoDB.find({name:photoDBKey});
+		return setsDB.find({photo:photoDBKey});
 	};
 	
 	Template.photoBrowser.events = ({
@@ -66,6 +66,8 @@ if (Meteor.is_server){
 
 		// check to see if userID is defined
 		FlickrSetList(apiKey,userID,setsDB,setsDBKey,function(){
+			//FlickrSetsToPhotos(function(){
+				
 			//define cursor
 			var setsItems = setsDB.find({name:"sets"});
 			//pass results into forEach function
@@ -73,19 +75,13 @@ if (Meteor.is_server){
 				var setFlickrID = eachSetItem.data.id;
 				var setDBid = eachSetItem._id;
 				console.log("Set Flickr ID = "+setFlickrID);
-				console.log("Set DB ID = "+setDBid);
+				console.log("Set DB ID = "+setDBid);	
 				FlickrSetPhotos(apiKey,setFlickrID,setDBid,photoDBKey);
 			});
-		});	
-				
-			//for (var i; i<)
-			//var setList = setsDB.find({name:setsDBKey});
-			//console.log(setList);
-			//for (var i = 0; i < setCount; i++){
-			//	setsDB._id[i]({})
+		});
 	
 		// startup page with photos by interestingness
-		FlickrSetPhotos(apiKey,setID,photoDB,photoDBKey);
+		//FlickrSetPhotos(apiKey,setID,photoDB,photoDBKey);
 	
 	});
 }
