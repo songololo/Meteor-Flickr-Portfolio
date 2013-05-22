@@ -10,7 +10,9 @@ var userName = "garethsimons";
 // global variable if methods in separate file.
 var userID = "78352164@N07";
 //Starter setID - also provides information for background image.
-var setID = "72157631158202186";
+var setID;
+var setDBid;
+var setFlickrID;
 //keys for database references
 var photoDBKey = "photo";
 var setsDBKey = "sets";
@@ -35,8 +37,8 @@ if (Meteor.is_client) {
 
 	Template.setsBrowser.events = ({
 		'click img' : function (event,template) {
-			setID = this.data.id;
-			FlickrSetPhotos (apiKey,setID,photoDB,photoDBKey);
+			//setID = this.data.id;
+			//FlickrSetPhotos
 		}
 	});
 
@@ -63,7 +65,24 @@ if (Meteor.is_server){
 	Meteor.startup(function () {
 
 		// check to see if userID is defined
-		FlickrSetList(apiKey,userID,setsDB,setsDBKey);
+		FlickrSetList(apiKey,userID,setsDB,setsDBKey,function(){
+			//define cursor
+			var setsItems = setsDB.find({name:"sets"});
+			//pass results into forEach function
+			setsItems.forEach(function(eachSetItem){
+				var setFlickrID = eachSetItem.data.id;
+				var setDBid = eachSetItem._id;
+				console.log("Set Flickr ID = "+setFlickrID);
+				console.log("Set DB ID = "+setDBid);
+				FlickrSetPhotos(apiKey,setFlickrID,setDBid,photoDBKey);
+			});
+		});	
+				
+			//for (var i; i<)
+			//var setList = setsDB.find({name:setsDBKey});
+			//console.log(setList);
+			//for (var i = 0; i < setCount; i++){
+			//	setsDB._id[i]({})
 	
 		// startup page with photos by interestingness
 		FlickrSetPhotos(apiKey,setID,photoDB,photoDBKey);
