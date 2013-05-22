@@ -4,7 +4,7 @@
 // Note that you need the Meteor HTTP package for the calls
 
 
-// Retrieves userID - not currently used.
+// Retrieves userID
 FlickrUserID = function(apiKey,userName,callback){
 	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key="+apiKey+"&username="+userName+"&format=json&nojsoncallback=1",function (error, result) {
 		if (result.statusCode === 200) {
@@ -22,7 +22,7 @@ FlickrUserID = function(apiKey,userName,callback){
 
 
 // Retrieves user's sets
-FlickrSetList = function(apiKey,userID,setsDB,setsDBKey){
+FlickrSetList = function(apiKey,userID,setsDB,setsDBKey,callback){
 	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key="+apiKey+"&user_id="+userID+"&format=json&nojsoncallback=1", {},function (error, result) {
 		if (result.statusCode === 200) {
 			setsDB.remove({});
@@ -32,6 +32,9 @@ FlickrSetList = function(apiKey,userID,setsDB,setsDBKey){
 				var info = setResult.photosets.photoset[i];
 				setsDB.insert({name:setsDBKey, data:info});
 			}
+		}
+		if (callback && typeof(callback) === "function") {  
+			callback();
 		}
 	});
 };
@@ -71,15 +74,18 @@ FlickrRandomPhotoFromSet = function(apiKey,setID){
 
 
 // Calls Flickr API to retrieve photos from a specific set - run as method to allow database remove operation
-FlickrSetPhotos = function(apiKey,setID,photoDB,photoDBKey){
-	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key="+apiKey+"&photoset_id="+setID+"&format=json&nojsoncallback=1",function (error, result) {
+FlickrSetPhotos = function(apiKey,setFlickrID,setDBid,photoDBKey){
+	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key="+apiKey+"&photoset_id="+setFlickrID+"&format=json&nojsoncallback=1",function (error, result) {
 		if (result.statusCode === 200) {
-			photoDB.remove({});
+			//setsDB.setDBid.photoDBKey.remove();
+			//photoDB.remove({});
 			var photoResult = JSON.parse(result.content);
 			var photoCount = photoResult.photoset.total -1;
 			for (var i = 0; i < photoCount; i++) {
 				var info = photoResult.photoset.photo[i];
-				photoDB.insert({name:photoDBKey, data:info});
+				console.log(i+" "+setFlickrID);
+				console.log(i+" "+setDBid);
+				//setsDB.setDBid.insert({name:photoDBKey, data:info});
 			}
 		}
 	});
