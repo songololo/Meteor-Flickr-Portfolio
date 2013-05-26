@@ -1,0 +1,81 @@
+/* CSS declarations go here */
+
+body {
+	margin: 0px;
+    padding: 0px;
+}
+
+#header {
+	position:fixed;
+	display:inline-block;
+	background-color: black;
+	padding:10px;
+	height:30px;
+	color:white;
+}
+
+.container {
+	position: relative;
+}
+
+#setsBrowser {
+	position: absolute;
+	display:block;
+	top:0px;
+	left:0px;
+	background-color: white;
+	opacity:50%;
+    overflow-y:scroll;
+}
+
+#photoBrowser {
+	position: absolute;
+	display:block;
+	top:250px;
+	left:0px;
+	background-color: pink;
+	opacity:50%;
+    overflow-y:scroll;
+}
+
+#photoScroller {
+	position: absolute;
+	display:block;
+	bottom:-1200px;
+	left:0px;
+	background-color:blue;
+}
+
+.setTile {
+	float:left;
+	padding:15px;
+}
+
+.photoTile {
+	float:left;
+	padding:15px;
+}
+
+.title {
+	background-color: black;
+	color: white;
+	opacity: 60%;
+}
+
+ul {
+    list-style: none;
+    padding: 0px;
+}
+
+ul li {
+    list-style: none;
+    margin: 1px;
+    display: inline;
+    padding: 1px;
+}
+
+#footer {
+    height: 200px;
+    border-top: 2px #222 solid;
+    padding:5px;
+}
