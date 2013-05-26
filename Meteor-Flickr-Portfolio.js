@@ -1,41 +1,19 @@
 // Created by Gareth Simons
 // Inspiration from flixploretest
 
-
-//// Variables required by Flickr API
-//NOTE that Meteor 0.6 scopes variables by file... 
-var apiKey = "b4b033a1b3c8f74573e021bd37565336";
-var userName = "garethsimons";
-//userID - can be generated, but then requires use of
-// global variable if methods in separate file.
-var userID = "78352164@N07";
-//Starter setID - also provides information for background image.
-var setID;
-var setDBid;
-var setFlickrID;
 //keys for database references
-var photoDBKey = "photo";
-var setsDBKey = "sets";
-
+var flickrDBKey = "flickrSet";
 
 //// Shared Databases
-photoDB = new Meteor.Collection(photoDBKey);
-setsDB = new Meteor.Collection(setsDBKey);
-
-
-
-//// Shared Functions
-function photoReturn(setFlickrID){
-	console.log(setsDB.find({id:setFlickrID}));
-	return setsDB.find({id:setFlickrID});
-}
-
+flickrDB = new Meteor.Collection(flickrDBKey);
 
 //// Client-side javascript
 if (Meteor.is_client) {
-	
-	Meteor.autosubscribe(function (){
-		Meteor.subscribe("photos",Session.get("setFlickrID"));
+	Meteor.startup(function(){
+		Meteor.subscribe("sets");
+		Deps.autorun(function(){
+			Meteor.subscribe("photos",Session.get("flickrSetID"));
+		});
 	});
 	
 	Template.backgroundImage.background = function(){
@@ -44,17 +22,18 @@ if (Meteor.is_client) {
 	};
 
 	Template.setsBrowser.sets = function(){
-		return setsDB.find();
+		return sets.find();
+		//return setsDB.find();
 	};
 
 	Template.setsBrowser.events = ({
 		'click img' : function (event,template) {
-			Session.set("setFlickrID",this.data.id);
+			Session.set("flickrSetID",this.data.id);
 		}
 	});
 
 	Template.photoBrowser.photos = function () {
-		return photoReturn(Session.get(""));
+		//return photoReturn(Session.get(""));
 	};
 	
 	Template.photoBrowser.events = ({
@@ -70,29 +49,30 @@ if (Meteor.is_client) {
 }
 
 
+
 //// Server-side javascript
 if (Meteor.is_server){
-	
-	Meteor.startup(function () {
 
-		// check to see if userID is defined
-		FlickrSetList(apiKey,userID,setsDB,setsDBKey,function(){
-			//FlickrSetsToPhotos(function(){
-				
-			//define cursor
-			var setsItems = setsDB.find({name:"sets"});
-			//pass results into forEach function
-			setsItems.forEach(function(eachSetItem){
-				var setFlickrID = eachSetItem.data.id;
-				var setDBid = eachSetItem._id;
-				FlickrSetPhotos(apiKey,setFlickrID,setDBid,photoDBKey);
-			
+//// Variables required by Flickr API
+//NOTE that Meteor 0.6 scopes variables by file... 
+	var apiKey = "b4b033a1b3c8f74573e021bd37565336";
+// userName only required if generating userID
+	var userName = "garethsimons";
+// userID - can be generated, but then requires use of
+// global variable if methods in separate file.
+	var userID = "78352164@N07";
+//Starter setID - also provides information for background image.
+
+
+	Meteor.startup(function () {	
+		FlickrSetList(apiKey,userID,flickrDB,flickrDBKey,function(){
+			Meteor.publish("sets",function(){
+				return flickrDB.find();
+			//Meteor.publish("photos",);
+			});
+			Meteor.publish("photos",function(){
+				return flickrDB.find();
 			});
 		});
-
-		Meteor.publish("photos",photoReturn);	
-		// startup page with photos by interestingness
-		//FlickrSetPhotos(apiKey,setID,photoDB,photoDBKey);
-	
 	});
 }
