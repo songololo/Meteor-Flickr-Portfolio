@@ -23,8 +23,20 @@ photoDB = new Meteor.Collection(photoDBKey);
 setsDB = new Meteor.Collection(setsDBKey);
 
 
+
+//// Shared Functions
+function photoReturn(setFlickrID){
+	console.log(setsDB.find({id:setFlickrID}));
+	return setsDB.find({id:setFlickrID});
+}
+
+
 //// Client-side javascript
 if (Meteor.is_client) {
+	
+	Meteor.autosubscribe(function (){
+		Meteor.subscribe("photos",Session.get("setFlickrID"));
+	});
 	
 	Template.backgroundImage.background = function(){
 		//FlickrRandomPhotoFromSet(apiKey,setID);
@@ -32,18 +44,17 @@ if (Meteor.is_client) {
 	};
 
 	Template.setsBrowser.sets = function(){
-		return setsDB.find({name:setsDBKey});
+		return setsDB.find();
 	};
 
 	Template.setsBrowser.events = ({
 		'click img' : function (event,template) {
-			//setID = this.data.id;
-			//FlickrSetPhotos
+			Session.set("setFlickrID",this.data.id);
 		}
 	});
 
 	Template.photoBrowser.photos = function () {
-		return setsDB.find({photo:photoDBKey});
+		return photoReturn(Session.get(""));
 	};
 	
 	Template.photoBrowser.events = ({
@@ -74,12 +85,12 @@ if (Meteor.is_server){
 			setsItems.forEach(function(eachSetItem){
 				var setFlickrID = eachSetItem.data.id;
 				var setDBid = eachSetItem._id;
-				console.log("Set Flickr ID = "+setFlickrID);
-				console.log("Set DB ID = "+setDBid);	
 				FlickrSetPhotos(apiKey,setFlickrID,setDBid,photoDBKey);
+			
 			});
 		});
-	
+
+		Meteor.publish("photos",photoReturn);	
 		// startup page with photos by interestingness
 		//FlickrSetPhotos(apiKey,setID,photoDB,photoDBKey);
 	
