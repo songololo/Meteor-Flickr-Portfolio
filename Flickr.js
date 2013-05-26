@@ -3,7 +3,6 @@
 // into the Flickr functions called from the main.
 // Note that you need the Meteor HTTP package for the calls
 
-
 // Retrieves userID
 FlickrUserID = function(apiKey,userName,callback){
 	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.people.findByUsername&api_key="+apiKey+"&username="+userName+"&format=json&nojsoncallback=1",function (error, result) {
@@ -19,7 +18,6 @@ FlickrUserID = function(apiKey,userName,callback){
 		}
 	});
 };
-
 
 // Retrieves user's sets
 FlickrSetList = function(apiKey,userID,setsDB,setsDBKey,callback){
@@ -39,6 +37,23 @@ FlickrSetList = function(apiKey,userID,setsDB,setsDBKey,callback){
 	});
 };
 
+// Calls Flickr API to retrieve photos from a specific set - run as method to allow database remove operation
+FlickrSetPhotos = function(apiKey,setFlickrID,setDBid,photoDBKey){
+	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key="+apiKey+"&photoset_id="+setFlickrID+"&format=json&nojsoncallback=1",function (error, result) {
+		if (result.statusCode === 200) {
+			//setsDB.setDBid.photoDBKey.remove();
+			//photoDB.remove({});
+			var photoResult = JSON.parse(result.content);
+			var photoCount = photoResult.photoset.total -1;
+			for (var i = 0; i < photoCount; i++) {
+				var info = photoResult.photoset.photo[i];
+				setsDB.update(setDBid,{$addToSet:
+					{"photos":{photoData:"info"}}
+				});
+			}
+		}
+	});
+};
 
 // Loads user's photos by interestingness
 FlickrPhotosInterestingness = function(apiKey,userID,photoDB,photoDBKey){
@@ -54,7 +69,6 @@ FlickrPhotosInterestingness = function(apiKey,userID,photoDB,photoDBKey){
 		}
 	});
 };
-
 
 // Calls random photo from particular set
 FlickrRandomPhotoFromSet = function(apiKey,setID){
@@ -73,26 +87,5 @@ FlickrRandomPhotoFromSet = function(apiKey,setID){
 };
 
 
-// Calls Flickr API to retrieve photos from a specific set - run as method to allow database remove operation
-FlickrSetPhotos = function(apiKey,setFlickrID,setDBid,photoDBKey){
-	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key="+apiKey+"&photoset_id="+setFlickrID+"&format=json&nojsoncallback=1",function (error, result) {
-		if (result.statusCode === 200) {
-			//setsDB.setDBid.photoDBKey.remove();
-			//photoDB.remove({});
-			var photoResult = JSON.parse(result.content);
-			var photoCount = photoResult.photoset.total -1;
-			for (var i = 0; i < photoCount; i++) {
-				var info = photoResult.photoset.photo[i];
-				console.log(i+" "+setFlickrID);
-				console.log(i+" "+setDBid);
-				setsDB.update(setDBid,
-					{$addToSet:
-						{photos:
-							{photo:photoDBKey,
-							data:info}
-						}
-					});
-			}
-		}
-	});
-};
+
+	
