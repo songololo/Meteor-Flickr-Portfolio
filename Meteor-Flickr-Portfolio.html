@@ -36,21 +36,26 @@
   </style>
 </template>
 
+
 <template name="setsBrowser">
 	<div class="setTile">
 		{{#each sets}}
 			<img src="http://farm{{data.farm}}.staticflickr.com/{{data.server}}/{{data.primary}}_{{data.secret}}_n.jpg">
+		{{data.title._content}}
 		{{/each}}
 	</div>
 </template>
+
 
 <template name="photoBrowser">
 	<div class="photoTile">
 		{{#each photos}} 
         	<img src="http://farm{{data.farm}}.staticflickr.com/{{data.server}}/{{data.id}}_{{data.secret}}_m.jpg"/>
+		{{photos}}
 		{{/each}}
 	</div>
 </template>
+
 
 <template name="photoScroller">
 	<div class="displayPhoto">
