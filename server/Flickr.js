@@ -24,25 +24,34 @@ FlickrUserID = function(apiKey,userName,callback){
 FlickrSetList = function(apiKey,userID,flickrDB,flickrDBKey,callback){
 	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key="+apiKey+"&user_id="+userID+"&format=json&nojsoncallback=1", {},function (error, result) {
 		if (result.statusCode === 200) {
-			flickrDB.remove({});
 			var setResult = JSON.parse(result.content);
 			var setCount = setResult.photosets.total -1;
 			for (var i = 0; i < setCount; i++) {
 				var info = setResult.photosets.photoset[i];
-				var setID = info.id;
-				Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key="+apiKey+"&photoset_id="+setID+"&extras=date_taken,tags,machine_tags,path_alias,url_sq,url_t,url_s,url_m,url_o&format=json&nojsoncallback=1", function(error,result){
-					if (result.statusCode === 200) {
-						var photos = JSON.parse(result.content);
-						var photoInfo = photos.photoset;
-						flickrDB.insert({
-							name:flickrDBKey,
-							data:info,
-							photos:photoInfo
-						});
-					}
-				});
+				var flickrSetID = info.id;
+				flickrDB.update(
+					{"id":flickrSetID},//query
+					{$set:{"name":flickrDBKey,"data":info}},//update
+					{upsert:true}//upsert
+				);
 			}
-			
+		}
+		if (callback && typeof(callback) === "function") {  
+			callback();
+		}
+	});
+};
+
+FlickrSetPhotos = function(apiKey,flickrSetID,flickrDBKey,callback){
+	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key="+apiKey+"&photoset_id="+flickrSetID+"&extras=date_taken,tags,machine_tags,path_alias,url_sq,url_t,url_s,url_m,url_o&format=json&nojsoncallback=1", function(error,result){
+		if (result.statusCode === 200) {
+			var photos = JSON.parse(result.content);
+			var photoInfo = photos.photoset;
+			flickrDB.update(
+				{"id":flickrSetID},//query
+				{$set:{"photos":photoInfo}},//update
+				{upsert:true}//upsert
+			);
 		}
 		if (callback && typeof(callback) === "function") {  
 			callback();
