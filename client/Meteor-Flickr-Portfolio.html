@@ -49,9 +49,9 @@
 
 <template name="photoBrowser">
 	<div class="photoTile">
-		{{#each photos}} 
-        	<img src="http://farm{{data.farm}}.staticflickr.com/{{data.server}}/{{data.id}}_{{data.secret}}_m.jpg"/>
-		{{photos}}
+		{{#each photos}}
+        	<img src={{url_s}}>
+        	{{title}}
 		{{/each}}
 	</div>
 </template>
