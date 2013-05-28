@@ -25,7 +25,7 @@ FlickrSetList = function(apiKey,userID,flickrDB,flickrDBKey,callback){
 	Meteor.http.call("GET","http://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key="+apiKey+"&user_id="+userID+"&format=json&nojsoncallback=1", {},function (error, result) {
 		if (result.statusCode === 200) {
 			var setResult = JSON.parse(result.content);
-			var setCount = setResult.photosets.total -1;
+			var setCount = setResult.photosets.total;
 			for (var i = 0; i < setCount; i++) {
 				var info = setResult.photosets.photoset[i];
 				var flickrSetID = info.id;
@@ -65,7 +65,7 @@ FlickrPhotosInterestingness = function(apiKey,userID,photoDB,photoDBKey){
 		if (result.statusCode === 200) {
 			photoDB.remove({});
 			var photoResult = JSON.parse(result.content);
-			var photoCount = photoResult.photos.total -1;
+			var photoCount = photoResult.photos.total;
 			for (var i = 0; i < photoCount; i++) {
 				var info = photoResult.photos.photo[i];
 				photoDB.insert({name:photoDBKey, data:info});
