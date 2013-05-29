@@ -1,13 +1,14 @@
+<!--DOCUMENT CONTENT-->
 <head>
   <title>gsweb</title>
 </head>
 
 <body>
 	{{>backgroundImage}}
-	<div id="header">
+	<header>
 		header information bar
-	</div>
-	<div class='container'>
+	</header>
+	<main>
 		<div id="setsBrowser">		
 			{{>setsBrowser}}
 		</div>
@@ -17,15 +18,15 @@
 		<div id="photoScroller">
 			{{>photoScroller}}
 		</div>
-	</div>
+	</main>
 	
-	<div id='footer'>
-		{{>footer}}
-	</div>
+	<footer>
+		<span>{{>footer}}</span>
+	</footer>
 </body>
 
 
-
+<!--TEMPLATE DEFINITIONS-->
 <template name="backgroundImage">
   <style>
 	  body {
@@ -36,34 +37,29 @@
   </style>
 </template>
 
-
 <template name="setsBrowser">
-	<div class="setTile">
-		{{#each sets}}
-			<img src="http://farm{{data.farm}}.staticflickr.com/{{data.server}}/{{data.primary}}_{{data.secret}}_n.jpg">
-		{{data.title._content}}
-		{{/each}}
-	</div>
+	{{#each sets}}
+		<div class="setTile">
+			<img src="http://farm{{data.farm}}.staticflickr.com/{{data.server}}/{{data.primary}}_{{data.secret}}_m.jpg"><br>
+			{{data.title._content}}<br>
+		</div>
+	{{/each}}
 </template>
-
 
 <template name="photoBrowser">
-	<div class="photoTile">
-		{{#each photos}}
-        	<img src={{url_s}}>
-        	{{title}}
-		{{/each}}
-	</div>
+	{{#each photos}}
+		<div class="photoTile">
+        	<img src={{url_s}}><br>
+        	{{title}}<br>
+		</div>
+	{{/each}}
 </template>
-
 
 <template name="photoScroller">
 	<div class="displayPhoto">
 		<img src="{{photo}}">
 	</div>
 </template>
-
-
 
 <template name="footer">
 	<div>
