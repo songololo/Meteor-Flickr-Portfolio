@@ -1,31 +1,32 @@
-/* CSS declarations go here */
+/* CSS DECLARATIONS */
 
 body {
 	margin: 0px;
     padding: 0px;
 }
 
-#header {
-	position:fixed;
-	display:inline-block;
+header {
 	background-color: black;
+	font-size:1em;
 	padding:10px;
-	height:30px;
+	height:40px;
 	color:white;
 }
 
-.container {
-	position: relative;
+main {
+	display:block;
 }
 
 #setsBrowser {
 	position: absolute;
-	display:block;
-	top:0px;
+	margin:0px;
+	padding:0px;
+	top:50px;
 	left:0px;
+	height:200px;
 	background-color: white;
 	opacity:50%;
-    overflow-y:scroll;
+    overflow-x:scroll;
 }
 
 #photoBrowser {
@@ -33,15 +34,16 @@ body {
 	display:block;
 	top:250px;
 	left:0px;
+	height:200px;
 	background-color: pink;
 	opacity:50%;
-    overflow-y:scroll;
+    overflow-x:scroll;
 }
 
 #photoScroller {
 	position: absolute;
 	display:block;
-	bottom:-1200px;
+	top:500px;
 	left:0px;
 	background-color:blue;
 }
@@ -74,7 +76,9 @@ ul li {
     padding: 1px;
 }
 
-#footer {
+footer {
+    position:absolute;
+    bottom:0px;
     height: 200px;
     border-top: 2px #222 solid;
     padding:5px;
