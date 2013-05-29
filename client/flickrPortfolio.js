@@ -3,24 +3,25 @@
 
 
 
-//// Collections:
-// Create flickr client-side minimongo collection.
-flickrDB = new Meteor.Collection("flickrDB");
-
-
-
-//// Variables:
+//// VARIABLES:
 var flickrDBKey = "flickrSets";
 // Currently selected set for photo display.
 Session.set('flickrSetID', null);
+Session.set('randomPhotoURL', null);
 
 
-
+//// CLIENT SIDE CODE:
 Meteor.startup(function(){
 	Meteor.subscribe("sets");
+	if (Session.get('randomPhotoURL') === null){
+		var setCount = flickrDB.count();
+		console.log(setCount);
+	}	
 });
 
 
+
+//// TEMPLATE MANAGERS:
 
 //Template.backgroundImage.background = function(){
 	//FlickrRandomPhotoFromSet(apiKey,setID);
