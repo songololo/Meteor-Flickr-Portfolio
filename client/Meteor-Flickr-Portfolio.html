@@ -6,7 +6,7 @@
 <body>
 	{{>backgroundImage}}
 	<header>
-		header information bar
+		header information bar <input type = "reset">
 	</header>
 	<main>
 		<div id="setsBrowser">		
@@ -28,13 +28,9 @@
 
 <!--TEMPLATE DEFINITIONS-->
 <template name="backgroundImage">
-  <style>
-	  body {
-	  background-image:url({{background}});
-	  background-repeat: no-repeat;
-	  background-position: left top;
-	  }
-  </style>
+  <div id="bg">
+  	<img src={{background}} alt="">
+  </div>
 </template>
 
 <template name="setsBrowser">
