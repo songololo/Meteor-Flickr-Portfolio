@@ -1,16 +1,38 @@
 /* CSS DECLARATIONS */
 
+#bg {
+  position: fixed; 
+  top: -50%; 
+  left: -50%; 
+  width: 200%; 
+  height: 200%;
+}
+#bg img {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  margin: auto; 
+  min-width: 50%;
+  min-height: 50%;
+}
+
 body {
 	margin: 0px;
     padding: 0px;
 }
 
 header {
+	position: absolute;
+	top: 0px;
+	left: 0px;
 	background-color: black;
 	font-size:1em;
 	padding:10px;
 	height:40px;
 	color:white;
+	width:100%
 }
 
 main {
@@ -24,8 +46,7 @@ main {
 	top:50px;
 	left:0px;
 	height:200px;
-	background-color: white;
-	opacity:50%;
+	background-color: rgba(0,0,0,0.5);
     overflow-x:scroll;
 }
 
@@ -35,7 +56,7 @@ main {
 	top:250px;
 	left:0px;
 	height:200px;
-	background-color: pink;
+	background-color: rgba(255,255,255,0.5);
 	opacity:50%;
     overflow-x:scroll;
 }
