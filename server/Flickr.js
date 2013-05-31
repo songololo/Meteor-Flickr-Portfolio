@@ -24,9 +24,10 @@ FlickrSetList = function(apiKey,userID,flickrDB,flickrDBKey,callback){
 			for (var i = 0; i < setCount; i++) {
 				var info = setResult.photosets.photoset[i];
 				var flickrSetID = info.id;
+				var num = i;
 				flickrDB.update(
 					{"id":flickrSetID},//query
-					{$set:{"name":flickrDBKey,"data":info}},//update
+					{$set:{"setNum":num, "key":flickrDBKey,"data":info}},//update
 					{upsert:true}//upsert
 				);
 			}
@@ -43,15 +44,6 @@ FlickrSetPhotos = function(apiKey,flickrSetID,flickrDBKey,callback){
 		if (result.statusCode === 200) {
 			var photos = JSON.parse(result.content);
 			var photoInfo = photos.photoset;
-			var count = photoInfo.total - 1;
-			// trying to insert random identifier and typical photo field name
-			console.log(count);
-			console.log(photoInfo);
-			// not working yet...
-			//for (var i=0; i++; i<count){
-			//	photoInfo.photo[i].name = "photo";
-			//	photoInfo.photo[i].random = Math.floor();
-			//}
 			flickrDB.update(
 				{"id":flickrSetID},//query
 				{$set:{"photos":photoInfo}},//update
