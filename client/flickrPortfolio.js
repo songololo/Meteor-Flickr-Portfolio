@@ -6,27 +6,27 @@
 //// VARIABLES:
 var flickrDBKey = "flickrSets";
 // Currently selected set for photo display.
-Session.set('flickrSetID', null);
-Session.set('randomPhotoURL', null);
+Session.set("flickrSetID", null);
+Session.set("randomPhotoURL", null);
+Session.set("currentPhoto", null);
+
 
 
 //// CLIENT SIDE CODE:
 Meteor.startup(function(){
 	Meteor.subscribe("sets");
-	if (Session.get('randomPhotoURL') === null){
-		var setCount = flickrDB.count();
-		console.log(setCount);
-	}	
+	Meteor.call("randomURL",function(error,result){
+		Session.set("randomPhotoURL", result);
+	});
 });
 
 
 
 //// TEMPLATE MANAGERS:
 
-//Template.backgroundImage.background = function(){
-	//FlickrRandomPhotoFromSet(apiKey,setID);
-	//return Session.get("RandomURL");
-//};
+Template.backgroundImage.background = function(){
+	return Session.get("randomPhotoURL");
+};
 
 Template.setsBrowser.sets = function(){
 	return flickrDB.find();
@@ -35,7 +35,7 @@ Template.setsBrowser.sets = function(){
 Template.setsBrowser.events = ({
 	'click img' : function (event,template) {
 		Session.set("flickrSetID",this.data.id);
-	}
+		}
 });
 
 Template.photoBrowser.photos = function () {
@@ -54,5 +54,7 @@ Template.photoBrowser.events = ({
 });
 
 Template.photoScroller.photo = function(){
-	return Session.get("currentPhoto");
+	if (Session.get("currentPhoto") !== null){
+		return Session.get("currentPhoto");
+	}
 };
