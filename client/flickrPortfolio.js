@@ -3,58 +3,134 @@
 
 
 
-//// VARIABLES:
+//// VARIABLES ////
 var flickrDBKey = "flickrSets";
 // Currently selected set for photo display.
-Session.set("flickrSetID", null);
-Session.set("randomPhotoURL", null);
+Session.set("setsDisplay", true);
+Session.set("setID", null);
+Session.set("setName", null);
+Session.set("photoName", null);
 Session.set("currentPhoto", null);
+Session.set("randomURL", null);
 
 
 
-//// CLIENT SIDE CODE:
+//// CLIENT SIDE CODE ////
 Meteor.startup(function(){
-	Meteor.subscribe("sets");
-	Meteor.call("randomURL",function(error,result){
-		Session.set("randomPhotoURL", result);
+	Meteor.call("randomURL", function(error,result){
+		console.log("Random photo URL is "+result);
+		Session.set("randomURL", result);
 	});
+	Meteor.subscribe("sets");
+	Meteor.call("test");
 });
 
 
 
-//// TEMPLATE MANAGERS:
-
+//// TEMPLATE MANAGERS ////
 Template.backgroundImage.background = function(){
-	return Session.get("randomPhotoURL");
+	return Session.get("randomURL");
+};
+
+Template.header.set = function(){
+	if (Session.get('setName') !== null){
+		return Session.get('setName');
+	}
+};
+
+Template.header.photo = function(){
+	if (Session.get("photoName") !== null){
+		return Session.get('photoName');
+	}
 };
 
 Template.setsBrowser.sets = function(){
-	return flickrDB.find();
+	if (Session.get("setsDisplay") === true){
+		return flickrDB.find();
+	}
 };
 
-Template.setsBrowser.events = ({
-	'click img' : function (event,template) {
-		Session.set("flickrSetID",this.data.id);
-		}
-});
-
 Template.photoBrowser.photos = function () {
-	var flickrSetID = Session.get("flickrSetID");
-	if (flickrSetID !== null){
+	if(Session.get("setID") !== null){
+		var flickrSetID = (Session.get("setID"));
 		var photoArray = flickrDB.findOne({id:flickrSetID});
 		return photoArray.photos.photo;
 	}
 };
 
-Template.photoBrowser.events = ({
-	'click img' : function (event,template) {
-		var imageURL = 'http://farm'+this.farm+'.staticflickr.com/'+this.server+'/'+this.id+'_'+this.secret+'_c.jpg';
-		Session.set("currentPhoto",imageURL);
+Template.photoScroller.photo = function(){
+	if (Session.get('currentPhoto') !== null){
+		return Session.get("currentPhoto");
+	}
+};
+
+
+
+//// TEMPLATE EVENTS ////
+Template.header.events = ({
+	'click button' : function () {
+		Meteor.call("newBackgroundImage", function(error,result){
+			Session.set("randomPhotoURL", result);
+		});
 	}
 });
 
-Template.photoScroller.photo = function(){
-	if (Session.get("currentPhoto") !== null){
-		return Session.get("currentPhoto");
+Template.header.events = ({
+	'click #title' : function (){
+		//Session.set("setID", null);
+		//Session.set("setName", null);
+		//Session.set("currentPhoto", null);
+		//Session.set("photoName", null);
 	}
+});
+
+Template.header.events = ({
+	'click #setsIntro' : function (){
+		//console.log("button clicked");
+		//Session.set("setsDisplay", true);
+		//console.log("setsDisplay");
+	}
+});
+
+Template.header.events = ({
+	'click #setTitle' : function (){
+		//Session.set("currentPhoto", null);
+		//Session.set("photoName", null);
+	}
+});
+
+Template.setsBrowser.events = ({
+	'click img' : function (event,template) {
+		Session.set("setID", this.data.id);
+		Session.set("setName", this.data.title._content);
+		Session.set("currentPhoto", null);
+		Session.set("photoName", null);
+	}
+});
+
+Template.photoBrowser.events = ({
+	'click img' : function (event,template) {
+		Session.set('photoName',this.title);
+		var imageURL = 'http://farm'+this.farm+'.staticflickr.com/'+this.server+'/'+this.id+'_'+this.secret+'_c.jpg';
+		Session.set("currentPhoto",imageURL);
+		Session.set("setID", null);
+	}
+});
+
+
+//// TEMPLATE JQUERY ////
+Template.header.rendered = function(){
+	$('.path').mouseenter(function(){
+		$(this).fadeTo('fast',0.8);
+	});
+	$('.path').mouseleave(function(){
+		$(this).fadeTo('fast', 0.5);
+	});
+};
+
+Template.footer.rendered = function(){
+	$('li').hover(function(){
+		$(this).fadeOut(200);
+		$(this).fadeIn(200);
+	});
 };
