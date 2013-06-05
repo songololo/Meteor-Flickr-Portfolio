@@ -14,12 +14,13 @@ var flickrDBKey = "flickrSets";
 //// SERVER SIDE CODE
 Meteor.startup(function () {	
 	FlickrUserID(apiKey,userName,function(){
+		console.log("User ID is set as "+userID);
 		FlickrSetList(apiKey,userID,flickrDB,flickrDBKey,function(){
-			var setList = flickrDB.find({name:flickrDBKey});
+			var setList = flickrDB.find({key:flickrDBKey});
 			setList.forEach(function(eachSetItem){
-				var flickrSetID=eachSetItem.data.id;
+				var flickrSetID = eachSetItem.data.id;
+				console.log("Updating pictures from set "+flickrSetID);
 				FlickrSetPhotos(apiKey,flickrSetID,flickrDBKey);
-				flickrDB._ensureIndex({random:1});
 			});
 			Meteor.publish("sets",function(){
 				return flickrDB.find(
@@ -48,5 +49,5 @@ Meteor.methods({
 		var url = setObject.photos.photo[photoRandom].url_o;
 		console.log("Random set index "+setRandom+" with random photo index "+photoRandom+" with a URL of "+url);
 		return url;
-		}
-	});
+	}
+});
