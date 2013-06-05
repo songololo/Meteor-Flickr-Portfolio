@@ -19,88 +19,67 @@
 }
 
 body {
-	margin: 0px;
-    padding: 0px;
+}
+
+.clear {
+	clear: both;
+}
+
+container {
+	position: absolute;
+	top: 25%;
+	max-height: 100%;
+	overflow-y:scroll;
 }
 
 header {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	background-color: black;
-	font-size:1em;
-	padding:10px;
-	height:40px;
-	color:white;
-	width:100%
+	background-color: rgba(0,0,0,0.2);
+	position:static;
 }
 
-main {
-	display:block;
+.path {
+	display:inline-block;
+	padding-left:10px;
+	opacity: 0.5;
+	color: white;
+}
+
+header button {
+	position:absolute;
+	top: 15px;
+	right: 10px;
 }
 
 #setsBrowser {
-	position: absolute;
-	margin:0px;
-	padding:0px;
-	top:50px;
-	left:0px;
-	height:200px;
-	background-color: rgba(0,0,0,0.5);
-    overflow-x:scroll;
+	background-color: green;
 }
 
 #photoBrowser {
-	position: absolute;
-	display:block;
-	top:250px;
-	left:0px;
-	height:200px;
-	background-color: rgba(255,255,255,0.5);
-	opacity:50%;
-    overflow-x:scroll;
+	background-color: white;
+	max-height: 500px;
 }
 
 #photoScroller {
-	position: absolute;
-	display:block;
-	top:500px;
-	left:0px;
-	background-color:blue;
+	background-color: fuchsia;
 }
 
 .setTile {
-	float:left;
+	display:inline-block;
 	padding:15px;
 }
 
 .photoTile {
-	float:left;
+	display:inline-block;
 	padding:15px;
 }
 
-.title {
-	background-color: black;
-	color: white;
-	opacity: 60%;
-}
-
-ul {
-    list-style: none;
-    padding: 0px;
-}
-
-ul li {
-    list-style: none;
-    margin: 1px;
-    display: inline;
-    padding: 1px;
-}
-
 footer {
-    position:absolute;
+    position:fixed;
     bottom:0px;
-    height: 200px;
     border-top: 2px #222 solid;
     padding:5px;
+}
+
+.breadcrumb {
+	display:inline-block;
 }
