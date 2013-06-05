@@ -5,21 +5,23 @@
 
 <body>
 	{{>backgroundImage}}
-	<header>
-		header information bar <input type = "reset">
-	</header>
-	<main>
-		<div id="setsBrowser">		
+	<container>
+		<header>
+			{{>header}}
+		</header>
+		<div id="setsBrowser">
 			{{>setsBrowser}}
+			<div class="clear"></div>
 		</div>
 		<div id="photoBrowser">
 			{{>photoBrowser}}
+		<div class="clear"></div>
 		</div>
 		<div id="photoScroller">
 			{{>photoScroller}}
+		<div class="clear"></div>
 		</div>
-	</main>
-	
+	</container>
 	<footer>
 		<span>{{>footer}}</span>
 	</footer>
@@ -31,6 +33,15 @@
   <div id="bg">
   	<img src={{background}} alt="">
   </div>
+</template>
+
+<template name="header">
+	<div>
+		<h4 class="path" id="title">shongololo studio</h4>
+		<h4 class="path" id="setsIntro">/ sets</h4>
+		<h4 class="path" id="setTitle">/ {{set}}</h4>
+		<h4 class="path" id="photoTitle">/ {{photo}}</h4>
+	</div>
 </template>
 
 <template name="setsBrowser">
@@ -58,7 +69,5 @@
 </template>
 
 <template name="footer">
-	<div>
-    	footer information bar
-    </div>
+	<input type="text" data-provide="typeahead">
 </template>
