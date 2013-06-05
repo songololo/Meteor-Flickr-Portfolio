@@ -17,12 +17,13 @@ Session.set("randomURL", null);
 
 //// CLIENT SIDE CODE ////
 Meteor.startup(function(){
-	Meteor.call("randomURL", function(error,result){
-		console.log("Random photo URL is "+result);
-		Session.set("randomURL", result);
-	});
+	if (Session.get("randomURL")===null){
+		Meteor.call("fetchRandomURL", function(error,result){
+			console.log("Random photo URL is "+result);
+			Session.set("randomURL", result);
+		});
+	}
 	Meteor.subscribe("sets");
-	Meteor.call("test");
 });
 
 
@@ -77,30 +78,35 @@ Template.header.events = ({
 
 Template.header.events = ({
 	'click #title' : function (){
-		//Session.set("setID", null);
-		//Session.set("setName", null);
-		//Session.set("currentPhoto", null);
-		//Session.set("photoName", null);
+		Session.set("setID", null);
+		Session.set("setName", null);
+		Session.set("currentPhoto", null);
+		Session.set("photoName", null);
 	}
 });
 
 Template.header.events = ({
 	'click #setsIntro' : function (){
-		//console.log("button clicked");
-		//Session.set("setsDisplay", true);
-		//console.log("setsDisplay");
+		console.log("button clicked");
+		Session.set("setsDisplay", true);
+		console.log("setsDisplay");
 	}
 });
 
 Template.header.events = ({
 	'click #setTitle' : function (){
-		//Session.set("currentPhoto", null);
-		//Session.set("photoName", null);
+		Session.set("currentPhoto", null);
+		Session.set("photoName", null);
 	}
 });
 
 Template.setsBrowser.events = ({
 	'click img' : function (event,template) {
+		Meteor.call("newRandomURL", function(error,result){
+			console.log("Random photo URL is "+result);
+			Session.set("randomURL", result);
+		});
+		
 		Session.set("setID", this.data.id);
 		Session.set("setName", this.data.title._content);
 		Session.set("currentPhoto", null);
